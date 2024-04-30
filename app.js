@@ -12,6 +12,8 @@ const DB = process.env.DATABASE.replace(
   '<password>',
   process.env.DATABASE_PASSWORD
 )
+
+// const DB = 'mongodb://localhost:27017/testPost4'
 mongoose.connect(DB)
     .then(res=> console.log("連線資料成功"));
 
