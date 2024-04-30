@@ -6,13 +6,13 @@ var cors = require('cors')
 
 // 資料庫設定開始
 const mongoose = require('mongoose');
-// const dotenv = require("dotenv");
-// dotenv.config({path:"./config.env"})
-// const DB = process.env.DATABASE.replace(
-//   '<password>',
-//   process.env.DATABASE_PASSWORD
-// )
-mongoose.connect('mongodb://localhost:27017/testPost4')
+const dotenv = require("dotenv");
+dotenv.config({path:"./config.env"})
+const DB = process.env.DATABASE.replace(
+  '<password>',
+  process.env.DATABASE_PASSWORD
+)
+mongoose.connect(DB)
     .then(res=> console.log("連線資料成功"));
 
 var indexRouter = require('./routes/index');
