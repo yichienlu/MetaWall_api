@@ -6,11 +6,17 @@ const handleSuccess = require('../handleSuccess.js');
 const handleError = require('../handleError.js');
 
 const Post = require('../models/posts')
+const User = require('../models/users')
 
 
 /* GET posts listing. */
 router.get('/', async function(req, res, next) {
-  const posts = await Post.find()
+  const timeSort = req.query.timeSort == "asc" ? "createdAt":"-createdAt"
+  const q = req.query.q !== undefined ? {"content": new RegExp(req.query.q)} : {};
+  const posts = await Post.find(q).populate({
+      path: 'user',
+      select: 'name photo '
+    }).sort(timeSort);
   handleSuccess(res, "文章獲取成功", posts)
 });
 
