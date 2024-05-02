@@ -34,21 +34,28 @@ router.post('/', async function(req, res, next) {
 router.put('/:id', async function(req, res, next) {
   const id = req.url.split('/')[1];
   try{
-    await Post.findByIdAndUpdate(id,req.body);
-    handleSuccess(res, "文章修改成功", null)
+    await Post.findByIdAndUpdate(
+      id,req.body,
+      {
+        new: true,
+      }
+    ).then((data)=>{
+      if(data){
+        handleSuccess(res, "文章修改成功",data)
+      }else{
+        handleError(res, "文章修改失敗", null)
+      }
+    });
   }
   catch(error){
     handleError(res, "文章修改失敗", null)
   }
 });
 
-
-
-/* DELETE one post. */
-router.delete('/:id', async function(req, res, next) {
-  const id = req.url.split('/')[1];
+/* DELETE all */
+router.delete('/all', async function(req, res, next) {
   try{
-    await Post.findByIdAndDelete(id);
+    await Post.deleteMany({});
     handleSuccess(res, "文章刪除成功", null)
   }
   catch(error){
@@ -57,11 +64,18 @@ router.delete('/:id', async function(req, res, next) {
 });
 
 
-/* DELETE all */
-router.delete('/all', async function(req, res, next) {
+/* DELETE one post. */
+router.delete('/:id', async function(req, res, next) {
+  const id = req.url.split('/')[1];
   try{
-    await Post.deleteMany({});
-    handleSuccess(res, "文章刪除成功", null)
+    await Post.findByIdAndDelete(id)
+    .then((data)=>{
+      if(data){
+        handleSuccess(res, "文章刪除成功")
+      }else{
+        handleError(res, "文章刪除失敗", null)
+      }
+    });
   }
   catch(error){
     handleError(res, "文章刪除失敗", null)
